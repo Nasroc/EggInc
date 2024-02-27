@@ -3,26 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/InputTouchDelegateBinding.h"
 #include "GameFramework/PlayerController.h"
-#include "TouchPlayerController.generated.h"
+#include "MyPlayerController.generated.h"
 
 
+/**
+ * 
+ */
 UCLASS()
-class EGGINC_API ATouchPlayerController : public APlayerController
+class EGGINC_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
-	ATouchPlayerController();
+
+	AMyPlayerController();
+	virtual void BeginPlay() override;
 
 protected:
-	// Called when the game starts or when spawned
-	
-
-public:	
-	// Called every frame
-	
-
 	
 };
-
