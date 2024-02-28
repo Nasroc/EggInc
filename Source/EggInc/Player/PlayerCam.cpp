@@ -3,6 +3,7 @@
 
 #include "PlayerCam.h"
 #include "Camera/CameraComponent.h"
+#include "MyPlayerController.h"
 
 // Sets default values
 APlayerCam::APlayerCam()
@@ -37,6 +38,7 @@ void APlayerCam::BeginPlay()
 	NewRotation.Yaw = 90.0f;
 	SetActorRotation(NewRotation);
 	SetActorLocation(FVector(0.0f, 0.0f, 3000.0f));
+	
 
 
 }
@@ -45,8 +47,8 @@ void APlayerCam::BeginPlay()
 void APlayerCam::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("Tick")));
 
+	TouchSetup();
 }
 
 // Called to bind functionality to input
@@ -54,26 +56,108 @@ void APlayerCam::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &APlayerCam::TouchInput);
-	PlayerInputComponent->BindTouch(IE_Released, this, &APlayerCam::TouchInput);
-	PlayerInputComponent->BindTouch(IE_Repeat, this, &APlayerCam::TouchInput);
-
-
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &APlayerCam::BeginTouch);
+	PlayerInputComponent->BindTouch(IE_Released, this, &APlayerCam::EndTouch);
 
 }
 
-void APlayerCam::TouchInput(ETouchIndex::Type FingerIndex, FVector Location)
+void APlayerCam::TouchSetup()
 {
-	
-	if (FingerIndex == ETouchIndex::Touch1)
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Red, TEXT("TouchSetup"));
+
+	if (bIsPressed)
 	{
-		if (ETouchIndex::Touch1 == IE_Pressed){
-			GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("Touch1 Pressed")));
-		}else if (ETouchIndex::Touch1 == IE_Repeat){
-			GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("Touch1 Repeat")));
-		}else{
-			GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, FString::Printf(TEXT("Touch1 Released")));
+		FVector2D TempLocation;
+		AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+
+		if(PlayerController)
+		{
+			bool bIsCurrentlyPressed;
+			PlayerController->GetInputTouchState(ETouchIndex::Touch1, TempLocation.X, TempLocation.Y, bIsCurrentlyPressed);
+		}
+
+		float Length = (InitialTouch - TempLocation).Size();
+
+		if (Length > 0.0f)
+		{
+			CurrentTouch = TempLocation;
+
+			FVector2D Delta = CurrentTouch - InitialTouch;
+			float XAbs = FMath::Abs(Delta.X);
+			float YAbs = FMath::Abs(Delta.Y);
+
+
+			/*
+				Fix the issue where player can only move on the x-axis or y-axis at a time
+			*/
+
+
+
+
+			if (XAbs > YAbs) 
+			{
+				InitialTouch = CurrentTouch;
+				if (Delta.X > 0)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right"));
+
+					Delta.X *= 2.0f;
+
+					SetActorLocation(GetActorLocation() + FVector(Delta.X, 0.0f, 0.0f));
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left"));
+
+					Delta.X *= 2.0f;
+
+					SetActorLocation(GetActorLocation() + FVector(Delta.X, 0.0f, 0.0f));
+				}
+			}
+			else
+			{
+				InitialTouch = CurrentTouch;
+				if (Delta.Y > 0)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Up"));
+
+					Delta.Y *= 2.0f;
+
+					SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y, 0.0f));
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Down"));
+
+					Delta.Y *= 2.0f;
+
+					SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y, 0.0f));
+				}
+			}
+
 		}
 	}
+}
 
+void APlayerCam::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+{
+	bIsPressed = true;
+	FVector2D TempLocation;
+	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+
+	if(PlayerController)
+	{
+		bool bIsCurrentlyPressed;
+		PlayerController->GetInputTouchState(ETouchIndex::Touch1, TempLocation.X, TempLocation.Y, bIsCurrentlyPressed);
+	}
+
+	InitialTouch = TempLocation;
+}
+
+
+void APlayerCam::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+{
+	bIsPressed = false;
+	IF_COND = true;
 }

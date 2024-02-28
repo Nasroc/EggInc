@@ -21,7 +21,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void TouchInput(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void TouchSetup();
+
+	FVector2D InitialTouch;
+	FVector2D CurrentTouch;
+
+	bool bIsPressed;
+	bool IF_COND;
 
 
 
