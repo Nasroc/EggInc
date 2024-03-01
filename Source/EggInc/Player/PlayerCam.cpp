@@ -28,6 +28,12 @@ APlayerCam::APlayerCam()
 
 }
 
+void APlayerCam::ButtonPressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Button Pressed"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Button Pressed"));
+}
+
 // Called when the game starts or when spawned
 void APlayerCam::BeginPlay()
 {
@@ -35,7 +41,7 @@ void APlayerCam::BeginPlay()
 
 	FRotator NewRotation = GetActorRotation();
 	NewRotation.Pitch = -25.0f;
-	NewRotation.Yaw = 90.0f;
+	NewRotation.Yaw = 100.0f;
 	SetActorRotation(NewRotation);
 	SetActorLocation(FVector(0.0f, 0.0f, 3000.0f));
 

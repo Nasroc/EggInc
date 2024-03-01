@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Pawn.h"
+#include "Engine/Engine.h"
 #include "Blueprint/UserWidget.h"
 #include "UserHud.generated.h"
 
@@ -10,10 +12,14 @@ class UUserHud : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+
+    virtual void NativeConstruct() override;
 	// Marking a parameterless function with CallInEditor makes a button
 	// show up in editor with that name (see screenshot)
 	UFUNCTION(CallInEditor, Category="Editor Fill Test")
 	void FillTextBlocks();
+
+ 
 
     
 
@@ -29,8 +35,25 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	class UCanvasPanel* CanvasPanel;
 
+    UPROPERTY(meta=(BindWidget))
+    class UButton* HatcheryButton;
+
 public:
     UFUNCTION()
-    void SetAnchor(UCanvasPanel* CanvasPanelAsset, UButton* Button, FAnchors Min, FAnchors Max);
+    void SetAnchor(UCanvasPanel* CanvasPanelAsset, UButton* Button);
+
+    UFUNCTION()
+    void OnHatcheryButtonClicked();
+
+    UFUNCTION()
+    void OnHatcheryButtonReleased();
+    
+
+    void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+       
+    bool bIsPressed;
+
+    FVector Location;
+
 
 };
