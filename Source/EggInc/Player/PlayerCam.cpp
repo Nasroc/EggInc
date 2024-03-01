@@ -38,6 +38,10 @@ void APlayerCam::BeginPlay()
 	NewRotation.Yaw = 90.0f;
 	SetActorRotation(NewRotation);
 	SetActorLocation(FVector(0.0f, 0.0f, 3000.0f));
+
+	MovementSpeed = 4.0f;
+
+	bInRange = true;
 	
 
 
@@ -49,6 +53,10 @@ void APlayerCam::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	TouchSetup();
+
+	bInRange = GetLocation();
+
+
 }
 
 // Called to bind functionality to input
@@ -63,8 +71,6 @@ void APlayerCam::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void APlayerCam::TouchSetup()
 {
-
-	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Red, TEXT("TouchSetup"));
 
 	if (bIsPressed)
 	{
@@ -94,48 +100,110 @@ void APlayerCam::TouchSetup()
 
 
 
-
-			if (XAbs > YAbs) 
+			if(XAbs > 2.0f && YAbs > 2.0f)	
 			{
 				InitialTouch = CurrentTouch;
-				if (Delta.X > 0)
+
+
+				Delta *= MovementSpeed;
+				
+				Movement = Delta.Size();
+
+				if(bInRange == true){
+					SetActorLocation(GetActorLocation() + FVector(Delta.X, Delta.Y, 0.0f));
+				}else{
+					SetActorLocation(GetActorLocation() + FVector(Delta.X/2, Delta.Y/2, 0.0f));
+				}
+				
+			}else{
+				if (XAbs > YAbs) 
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right"));
+					InitialTouch = CurrentTouch;
+					if (Delta.X > 0)
+					{
 
-					Delta.X *= 2.0f;
+						SwipeDirection =  Swipe::Direction::Right;
 
-					SetActorLocation(GetActorLocation() + FVector(Delta.X, 0.0f, 0.0f));
+						Delta.X *= MovementSpeed;
+
+						Movement = Delta.X;
+
+						if(bInRange == true){
+							SetActorLocation(GetActorLocation() + FVector(Delta.X, 0.0f, 0.0f));
+						}else{
+							SetActorLocation(GetActorLocation() + FVector(Delta.X/2, 0.0f, 0.0f));
+						}
+					}
+					else
+					{
+
+						SwipeDirection =  Swipe::Direction::Left;
+
+						Delta.X *= MovementSpeed;
+
+						Movement = Delta.X;
+
+						if(bInRange == true){
+							SetActorLocation(GetActorLocation() + FVector(Delta.X, 0.0f, 0.0f));
+						}else{
+							SetActorLocation(GetActorLocation() + FVector(Delta.X/2, 0.0f, 0.0f));
+						}
+					}
 				}
 				else
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left"));
+					InitialTouch = CurrentTouch;
+					if (Delta.Y > 0)
+					{
 
-					Delta.X *= 2.0f;
+						SwipeDirection =  Swipe::Direction::Up;
 
-					SetActorLocation(GetActorLocation() + FVector(Delta.X, 0.0f, 0.0f));
+						Delta.Y *= MovementSpeed;
+
+						Movement = Delta.Y;
+
+						if(bInRange == true){
+							SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y, 0.0f));
+						}else{
+							SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y/2, 0.0f));
+						}
+					}
+					else
+					{
+
+						SwipeDirection =  Swipe::Direction::Down;
+
+						Delta.Y *= MovementSpeed;
+
+						Movement = Delta.Y;
+
+						if(bInRange == true){
+							SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y, 0.0f));
+						}else{
+							SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y/2, 0.0f));
+						}
+						
+					}
 				}
 			}
-			else
-			{
-				InitialTouch = CurrentTouch;
-				if (Delta.Y > 0)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Up"));
 
-					Delta.Y *= 2.0f;
+		}
+	}else if(bIsReleased && bInRange == false){
 
-					SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y, 0.0f));
-				}
-				else
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Down"));
-
-					Delta.Y *= 2.0f;
-
-					SetActorLocation(GetActorLocation() + FVector(0.0f, Delta.Y, 0.0f));
-				}
-			}
-
+		switch(SwipeDirection)
+		{
+			case Swipe::Direction::Up:
+				bIsReleased = false;
+				break;
+			case Swipe::Direction::Down:
+				bIsReleased = false;
+				break;
+			case Swipe::Direction::Left:
+				bIsReleased = false;
+				break;
+			case Swipe::Direction::Right:
+				bIsReleased = false;
+				break;
 		}
 	}
 }
@@ -159,5 +227,33 @@ void APlayerCam::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector L
 void APlayerCam::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	bIsPressed = false;
-	IF_COND = true;
+	bIsReleased = true;
+
+}
+
+bool APlayerCam::GetLocation()
+{
+	FVector ActorLocation;
+	FVector2D Location;
+
+	const FVector2D Origin = FVector2D(0.0f, 0.0f);
+
+	ActorLocation = GetActorLocation();
+	Location = FVector2D(ActorLocation.X, ActorLocation.Y);
+
+	float Distance = (Location - Origin).Size();
+
+	Distance += Movement;
+
+	if(Distance < 10000.0f)
+	{
+		return true;
+
+		
+	}else
+	{
+		return false;
+
+	}
+
 }

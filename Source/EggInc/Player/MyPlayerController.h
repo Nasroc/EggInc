@@ -3,9 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "G:\UEGames\EggInc\Source\EggInc\UI\MyUserWidget.h"
 #include "Engine/InputTouchDelegateBinding.h"
 #include "GameFramework/PlayerController.h"
+#include "PlayerCam.h"
+#include "Blueprint/UserWidget.h"
 #include "MyPlayerController.generated.h"
+
 
 
 /**
@@ -21,8 +25,20 @@ public:
 	AMyPlayerController();
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	class UMyUserWidget* UserInterface;
+
+	UPROPERTY()
+	class UMyUserWidget* MyUserWidget;
+
+	
+
+protected:
+
 
 
 protected:
+	class APlayerCam* PlayerCam;
+
 	
 };

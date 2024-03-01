@@ -6,13 +6,16 @@
 AMyPlayerController::AMyPlayerController()
 {
     bShowMouseCursor = true;
-
     bEnableTouchEvents = true;
-
     EnableInput(this);
+
+    
 }
 
 void AMyPlayerController::BeginPlay()
 {
     Super::BeginPlay();
+
+    PlayerCam = Cast<APlayerCam>(GetPawn());
+
 }

@@ -6,6 +6,17 @@
 #include "GameFramework/Pawn.h"
 #include "PlayerCam.generated.h"
 
+
+UENUM(BlueprintType)
+ namespace Swipe{
+	enum Direction {
+	 Up,
+	 Down,
+	 Left,
+	 Right
+ };
+
+ }
 UCLASS()
 class EGGINC_API APlayerCam : public APawn
 {
@@ -25,11 +36,20 @@ protected:
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchSetup();
 
+	bool GetLocation();
+
 	FVector2D InitialTouch;
 	FVector2D CurrentTouch;
 
+	Swipe::Direction SwipeDirection;
+
 	bool bIsPressed;
-	bool IF_COND;
+	bool bIsReleased;
+	bool bInRange;
+
+	float Movement;
+	float MovementSpeed;
+	float SlowSpeed;
 
 
 
