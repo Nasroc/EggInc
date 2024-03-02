@@ -43,7 +43,7 @@ void APlayerCam::BeginPlay()
 	NewRotation.Pitch = -25.0f;
 	NewRotation.Yaw = 100.0f;
 	SetActorRotation(NewRotation);
-	SetActorLocation(FVector(0.0f, 0.0f, 3000.0f));
+	SetActorLocation(FVector(-340.0f, -3265.0f, 3000.0f));
 
 	MovementSpeed = 4.0f;
 

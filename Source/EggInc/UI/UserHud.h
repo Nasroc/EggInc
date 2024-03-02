@@ -12,11 +12,12 @@ class UUserHud : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-
     virtual void NativeConstruct() override;
-	// Marking a parameterless function with CallInEditor makes a button
-	// show up in editor with that name (see screenshot)
-	UFUNCTION(CallInEditor, Category="Editor Fill Test")
+    void InitializeArray();
+    void NewFunction();
+    // Marking a parameterless function with CallInEditor makes a button
+    // show up in editor with that name (see screenshot)
+    UFUNCTION(CallInEditor, Category="Editor Fill Test")
 	void FillTextBlocks();
 
  
@@ -38,6 +39,9 @@ protected:
     UPROPERTY(meta=(BindWidget))
     class UButton* HatcheryButton;
 
+	UPROPERTY(EditDefaultsOnly, Category="Chicken")
+	TSubclassOf<class ATestChicken> MyTestChicken;
+
 public:
     UFUNCTION()
     void SetAnchor(UCanvasPanel* CanvasPanelAsset, UButton* Button);
@@ -53,7 +57,11 @@ public:
        
     bool bIsPressed;
 
+	int32 RandomIndex;
+
     FVector Location;
+	FActorSpawnParameters SpawnInfo;
+	FVector Locations[32];
 
 
 };

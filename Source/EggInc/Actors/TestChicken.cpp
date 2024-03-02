@@ -20,12 +20,21 @@ ATestChicken::ATestChicken()
 		VisualMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	}
 
+	HenHouseLocations[0] = FVector(-1702.0f, 3096.0f, 57.0f);
+	HenHouseLocations[1] = FVector(-3041.5f, 1756.0f, 57.0f);
+	HenHouseLocations[2] = FVector(-325.5f, 4472.0f, 57.0f);
+	HenHouseLocations[3] = FVector(-4373.0f, 422.0f, 57.0f);
+
 }
 
 // Called when the game starts or when spawned
 void ATestChicken::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+
+	Location = GetHenHouseLocation();
 	
 }
 
@@ -34,5 +43,11 @@ void ATestChicken::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+FVector ATestChicken::GetHenHouseLocation()
+{
+	RandomIndex = FMath::RandRange(0, 3);
+	return HenHouseLocations[RandomIndex];
 }
 
