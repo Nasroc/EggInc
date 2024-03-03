@@ -61,7 +61,7 @@ public:
 
     FVector Location;
 	FActorSpawnParameters SpawnInfo;
-	FVector Locations[32];
+	FVector Locations[5];
 
 
 };

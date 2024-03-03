@@ -74,53 +74,12 @@ void UUserHud::NativeConstruct()
 
 void UUserHud::InitializeArray()
 {
-    //Add locations behind the start location
-    Locations[0] = FVector(-1500.0f, -610.0f, 80.0f);
-    Locations[1] = FVector(-1700.0f, -610.0f, 80.0f);
-    Locations[2] = FVector(-1900.0f, -610.0f, 80.0f);
-    Locations[3] = FVector(-2000.0f, -610.0f, 80.0f);
 
-    //Add locations in front of the start location
-    Locations[4] = FVector(-1300.0f, -610.0f, 80.0f);
-    Locations[5] = FVector(-1100.0f, -610.0f, 80.0f);
-    Locations[6] = FVector(-900.0f, -610.0f, 80.0f);
-    Locations[7] = FVector(-700.0f, -610.0f, 80.0f);
-
-    //Add locations to the left of the start location
-    Locations[8] = FVector(-1500.0f, -810.0f, 80.0f);
-    Locations[9] = FVector(-1500.0f, -1010.0f, 80.0f);
-    Locations[10] = FVector(-1500.0f, -1210.0f, 80.0f);
-    Locations[11] = FVector(-1500.0f, -1410.0f, 80.0f);
-
-    //Add locations to the right of the start location
-    Locations[12] = FVector(-1500.0f, -410.0f, 80.0f);
-    Locations[13] = FVector(-1500.0f, -210.0f, 80.0f);
-    Locations[14] = FVector(-1500.0f, -10.0f, 80.0f);
-    Locations[15] = FVector(-1500.0f, 190.0f, 80.0f);
-
-    //Add locations to the front right of the start location
-    Locations[16] = Locations[0];
-    Locations[17] = Locations[0];
-    Locations[18] = Locations[0];
-    Locations[19] = Locations[0];
-
-    //Add locations to the front left of the start location
-    Locations[20] = FVector(-1700.0f, -410.0f, 80.0f);
-    Locations[21] = FVector(-1900.0f, -210.0f, 80.0f);
-    Locations[22] = FVector(-2100.0f, -10.0f, 80.0f);
-    Locations[23] = FVector(-2200.0f, 90.0f, -20.0f);
-
-    //Add locations to the back right of the start location
-    Locations[24] = FVector(-1500.0f, -810.0f, 80.0f);
-    Locations[25] = FVector(-1700.0f, -1010.0f, 80.0f);
-    Locations[26] = FVector(-1900.0f, -810.0f, 80.0f);
-    Locations[27] = FVector(-2000.0f, -1010.0f, 80.0f);
-
-    //Add locations to the back left of the start location
-    Locations[28] = FVector(-1700.0f, -810.0f, 80.0f);
-    Locations[29] = FVector(-1900.0f, -1010.0f, 80.0f);
-    Locations[30] = Locations[0];
-    Locations[31] = Locations[1];
+    Locations[0] = FVector(-1374.332805, -1094.670723f, 180.006230f);
+    Locations[1] = FVector(-1526.891787f, -942.111741f, 180.006232f);
+    Locations[2] = FVector(-1667.444592f, -801.558936f, 180.006233f);
+    Locations[3] = FVector(-1817.471699f, -651.531829f, 180.006233f);
+    Locations[4] = FVector(-1947.245803f, -521.757725f, 180.006234f);
 
 
 }
@@ -157,9 +116,9 @@ void UUserHud::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     {
         GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Red, TEXT("Button Pressed"));
         const FRotator Rotation(0.0f, 0.0f, 0.0f);
-        RandomIndex = FMath::RandRange(0, 31);
+        RandomIndex = FMath::RandRange(0, 4);
         Location = Locations[RandomIndex];
-        SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+        SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
         GetWorld()->SpawnActor<ATestChicken>(MyTestChicken, Location, Rotation, SpawnInfo);
         
     }
