@@ -41,7 +41,6 @@ void UUserHud::FillTextBlocks()
 	UCanvasPanel* AssetCanvasPanel = Cast<UCanvasPanel>(MainAsset->WidgetTree->FindWidget("CanvasPanel"));
 
     AssetCanvasPanel->SetToolTipText(FText::FromString("This is a tooltip"));
-
 	AssetCanvasPanel->ClearChildren();
 
         const FString WidgetName = FString::Printf(TEXT("HatcheryButton"));
