@@ -1,6 +1,8 @@
 Hello Everyone!
 
-In this project I am trying to create a replica of Egg Inc. I have no plans to market this!!!
+In this project I am trying to create a replica of Egg Inc. 
+
+!!!I HAVE NO PLANS OF MARKETING THIS!!!
 
 I am creating this project for educational purposes as I wanted to try making a game in Ue5 using C++ for the majority of the logic to help me learn the language.
 
